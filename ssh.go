@@ -103,3 +103,15 @@ func (k6ssh *K6SSH) Run(command string) (string, error) {
 	err = session.Run(command)
 	return stdoutBuf.String(), err
 }
+
+func (k6ssh *K6SSH) Shell() (string, error) {
+	session, err := k6ssh.Client.NewSession()
+	if err != nil {
+		return "", err
+	}
+	defer session.Close()
+	var stdoutBuf bytes.Buffer
+	session.Stdout = &stdoutBuf
+	err = session.Shell()
+	return stdoutBuf.String(), err
+}
